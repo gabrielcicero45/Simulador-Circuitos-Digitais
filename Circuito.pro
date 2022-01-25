@@ -25,16 +25,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
     bool3S.cpp \
+    circuit.cpp \
     maincircuito.cpp \
     modificarporta.cpp \
     newcircuito.cpp \
-    modificarsaida.cpp
+    modificarsaida.cpp \
+    port.cpp
 
 HEADERS  += maincircuito.h \
     bool3S.h \
+    circuit.h \
     modificarporta.h \
     newcircuito.h \
-    modificarsaida.h
+    modificarsaida.h \
+    port.h
 
 FORMS    += maincircuito.ui \
     modificarporta.ui \
