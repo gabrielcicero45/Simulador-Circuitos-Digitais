@@ -1,0 +1,35 @@
+# depslib dependency file v1.0
+1628017834 source:c:\users\joaov\desktop\circuito qt\circuito\bool3s.cpp
+	<iostream>
+	"bool3S.h"
+
+1628017015 c:\users\joaov\desktop\circuito qt\circuito\bool3s.h
+	<iostream>
+
+1642966660 source:c:\users\joaov\desktop\circuito qt\circuito\circuito-main.cpp
+	<iostream>
+	<string>
+	"circuit.h"
+
+1642528596 c:\users\joaov\desktop\circuito qt\circuito\circuit.h
+	<iostream>
+	<string>
+	<vector>
+	"bool3S.h"
+	"port.h"
+
+1632175072 c:\users\joaov\desktop\circuito qt\circuito\port.h
+	<iostream>
+	<string>
+	<vector>
+	"bool3S.h"
+
+1642945691 source:c:\users\joaov\desktop\circuito qt\circuito\port.cpp
+	<fstream>
+	"port.h"
+
+1643053002 source:c:\users\joaov\desktop\circuito qt\circuito\circuit.cpp
+	<fstream>
+	"circuit.h"
+	<string>
+
