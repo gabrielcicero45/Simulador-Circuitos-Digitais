@@ -230,7 +230,7 @@ unsigned Circuit::getNumInputsPort(int IdPort) const{
 }
 
 int Circuit::getId_inPort(int IdPort, unsigned I) const{
-    if(definedPort(IdPort) && I>=0 && I<getNumInputsPort(IdPort)){
+    if(definedPort(IdPort) && I<getNumInputsPort(IdPort)){
         return ports[IdPort-1]->getId_in(I);
     }
     else{
@@ -321,14 +321,14 @@ bool Circuit::ler(const string& arq){
         if (!arq_ler.is_open()) {return false;}
 
 
-        string circ, port, tipo, saidas, lixo, dpt;
-        unsigned NI, NO, NP, numInPort, indice_saida;
-        int Id;
+        string circ, port, tipo, saidas, parenteses, dois_pontos;
+        unsigned NI, NO, NP, numInPort, indice_saida, Id;
+        int idInPort;
 
         arq_ler>>circ;
         if(circ=="CIRCUITO"){
-            arq_ler>>dpt;
-            if(dpt!=":"){
+            arq_ler>>dois_pontos;
+            if(dois_pontos!=":"){
                 arq_ler.close();
                 return false;
             }
@@ -352,8 +352,8 @@ bool Circuit::ler(const string& arq){
 
         arq_ler>>port;
         if(port=="PORTAS"){
-            arq_ler>>dpt;
-            if(dpt!=":"){
+            arq_ler>>dois_pontos;
+            if(dois_pontos!=":"){
                 clear();
                 arq_ler.close();
                 return false;
@@ -368,9 +368,9 @@ bool Circuit::ler(const string& arq){
 
         for(unsigned i=0; i<getNumPorts();i++)
         {
-            arq_ler>>Id>>lixo>>tipo>>numInPort>>lixo;
+            arq_ler>>Id>>parenteses>>tipo>>numInPort>>dois_pontos;
 
-            if(Id!=i+1){
+            if(Id!=i+1 || parenteses!=")" || dois_pontos!=":"){
                 clear();
                 arq_ler.close();
                 return false;
@@ -392,20 +392,20 @@ bool Circuit::ler(const string& arq){
 
             for(unsigned j=0; j<ports[i]->getNumInputs(); j++)
             {
-                arq_ler>>Id;
-                if(!validIdOrig(Id)){
+                arq_ler>>idInPort;
+                if(!validIdOrig(idInPort)){
                     clear();
                     arq_ler.close();
                     return false;
                 }
-                ports[i]->setId_in(j,Id);
+                ports[i]->setId_in(j,idInPort);
             }
         }
 
         arq_ler>>saidas;
         if(saidas=="SAIDAS"){
-            arq_ler>>dpt;
-            if(dpt!=":"){
+            arq_ler>>dois_pontos;
+            if(dois_pontos!=":"){
                 clear();
                 arq_ler.close();
                 return false;
@@ -419,9 +419,9 @@ bool Circuit::ler(const string& arq){
         }
         for(unsigned i=0; i<getNumOutputs();i++)
         {
-            arq_ler>>Id>>lixo>>indice_saida;
+            arq_ler>>Id>>parenteses>>indice_saida;
 
-            if(Id!=i+1){
+            if(Id!=i+1|| parenteses!=")"){
                 clear();
                 arq_ler.close();
                 return false;
@@ -486,31 +486,33 @@ bool Circuit::simular(const std::vector<bool3S>& in_circ){
         tudo_def = true;
         alguma_def = false;
 
-        for (unsigned i = 0;i <getNumPorts(); i++){
+           for (unsigned i = 0;i <getNumPorts(); i++){
 
             if(ports[i]->getOutput() == bool3S::UNDEF){
 
-                for (unsigned j = 0; j<ports[i]->getNumInputs(); j++){
+                    for (unsigned j = 0; j<ports[i]->getNumInputs(); j++){
 
-                    id = ports[i]->getId_in(j);
+                        id = ports[i]->getId_in(j);
 
-                    if(id>0){
-                        in_port[j] = ports[id-1]->getOutput();
+                        if(id>0){
+                            in_port[j] = ports[id-1]->getOutput();
+
+                        }
+                        else{
+                            in_port[j] = in_circ[-id-1];
+
+                        }
+
+                    }
+                    ports[i]->simular(in_port);
+
+                    if(ports[i]->getOutput() == bool3S::UNDEF){
+                        tudo_def = false;
                     }
                     else{
-                        in_port[j] = in_circ[-id-1];
+                        alguma_def = true;
                     }
                 }
-
-                ports[i]->simular(in_port);
-
-                if(ports[i]->getOutput() == bool3S::UNDEF){
-                    tudo_def = false;
-                }
-                else{
-                    alguma_def = true;
-                }
-            }
 
         }
 

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include "newcircuito.h"
+#include "circuit.h"
 #include "modificarporta.h"
 #include "modificarsaida.h"
 
@@ -71,6 +72,8 @@ signals:
 
 private:
   Ui::MainCircuito *ui;
+
+  Circuit C;
 
   // Os exibidores dos valores na barra de status
   QLabel *numIn;     // Exibe o numero de entradas do circuito na barra de status
